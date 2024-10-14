@@ -37,7 +37,7 @@ function Wishlist() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col gap-y-2">
+    <div className="max-w-5xl px-2 mx-auto flex flex-col gap-y-2">
       <div>
         {loading ? (
           Array.from({ length: 6 }, (_, idx) => (

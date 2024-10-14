@@ -3,13 +3,13 @@ import Logo from "../assets/logo.svg";
 
 function Navbar() {
   return (
-    <header className="p-4">
-      <div className="container flex justify-between h-16 mx-auto">
+    <header className="py-4 max-w-5xl mx-auto">
+      <div className="flex justify-between h-16 mx-auto">
         <Link
           rel="noopener noreferrer"
           to="/"
           aria-label="Back to homepage"
-          className="flex items-center p-2"
+          className="flex items-center py-2"
         >
           <img src={Logo} alt="Logo" className="w-16 h-16" />
         </Link>
