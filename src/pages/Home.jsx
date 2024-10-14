@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [books, setBooks] = useState([]);
@@ -67,8 +68,12 @@ function Home() {
                 </div>
               </div>
             ))
-          : books.map((book) => (
-              <div key={book.id} className="flex items-center p-4 border-b">
+          : books?.map((book) => (
+              <Link
+                to={`/books/${book.id}`}
+                key={book.id}
+                className="flex items-center p-4 border-b hover:bg-slate-400/30 cursor-pointer"
+              >
                 <img
                   src={book.formats["image/jpeg"]}
                   alt={book.title}
@@ -77,7 +82,7 @@ function Home() {
                 <div className="flex flex-col ml-4">
                   <h2 className="text-lg font-medium">{book.title}</h2>
                 </div>
-              </div>
+              </Link>
             ))}
       </div>
       <div>
