@@ -95,7 +95,7 @@ function Wishlist() {
           <p className="text-gray-500 text-center">No books in wishlist</p>
         )}
       </div>
-      {books.length && (
+      {books.length > 0 && (
         <div>
           <button
             type="button"
