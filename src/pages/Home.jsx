@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { LocalDb } from "../lib/LocalDb";
 
 function Home() {
   const [books, setBooks] = useState([]);
@@ -13,18 +14,22 @@ function Home() {
 
   const fetchBooks = (URL, signal) => {
     setLoading(true);
-    axios.get(URL, { signal }).then((response) => {
-      const { results, next, previous } = response.data;
-      setBooks(() => results);
-      setNextURL(next);
-      setPreviousURL(previous);
-      setLoading(false);
-    });
+    axios
+      .get(URL, { signal })
+      .then((response) => {
+        const { results, next, previous } = response.data;
+        setBooks(() => results);
+        setNextURL(next);
+        setPreviousURL(previous);
+        setLoading(false);
+      })
+      .catch(() => {});
   };
 
   const handleSearchAndFetch = (e) => {
-    const searchText = e.target.value;
-    setSearchText(searchText);
+    const searchTextValue = e.target.value;
+    setSearchText(searchTextValue);
+    LocalDb.set("search", searchTextValue);
 
     if (controllerRef.current) {
       controllerRef.current.abort();
@@ -36,8 +41,8 @@ function Home() {
     if (selectedFilter) {
       apiURL += `topic=${encodeURIComponent(selectedFilter)}&`;
     }
-    if (searchText) {
-      apiURL += `search=${encodeURIComponent(searchText)}`;
+    if (searchTextValue) {
+      apiURL += `search=${encodeURIComponent(searchTextValue)}`;
     }
     fetchBooks(apiURL, signal);
   };
@@ -45,6 +50,7 @@ function Home() {
   const handleFilterAndFetch = (e) => {
     const filter = e.target.value;
     setSelectedFilter(filter);
+    LocalDb.set("filter", filter);
 
     if (controllerRef.current) {
       controllerRef.current.abort();
@@ -65,7 +71,16 @@ function Home() {
   useEffect(() => {
     controllerRef.current = new AbortController();
     const signal = controllerRef.current.signal;
-    fetchBooks("https://gutendex.com/books", signal);
+    setSearchText(() => LocalDb.get("search"));
+    setSelectedFilter(() => LocalDb.get("filter"));
+    let apiURL = "https://gutendex.com/books?";
+    if (LocalDb.get("filter")) {
+      apiURL += `topic=${encodeURIComponent(LocalDb.get("filter"))}&`;
+    }
+    if (LocalDb.get("search")) {
+      apiURL += `search=${encodeURIComponent(LocalDb.get("search"))}`;
+    }
+    fetchBooks(apiURL, signal);
   }, []);
 
   return (
@@ -75,6 +90,7 @@ function Home() {
           <span>Filter by: </span>
           <select
             onChange={handleFilterAndFetch}
+            value={selectedFilter}
             className="p-2 text-sm rounded-md focus:outline-none bg-gray-100 text-gray-800 focus:bg-gray-50 focus:border-violet-600 border border-gray-400"
           >
             <option value="">None</option>
@@ -129,6 +145,7 @@ function Home() {
             name="Search"
             placeholder="Search by title..."
             onChange={handleSearchAndFetch}
+            value={searchText}
             className="w-32 py-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none bg-gray-100 text-gray-800 focus:bg-gray-50 focus:border-violet-600 border border-gray-400"
           />
         </div>
