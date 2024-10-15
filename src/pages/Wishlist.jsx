@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LocalDb } from "../lib/LocalDb";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,8 @@ import axios from "axios";
 function Wishlist() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [nextURL, setNextURL] = useState(null);
+  const [previousURL, setPreviousURL] = useState(null);
 
   const fetchBooks = () => {
     const ids = LocalDb.getWishlist().join(",");
@@ -18,8 +20,10 @@ function Wishlist() {
     axios
       .get(URL)
       .then((response) => {
-        const { results } = response.data;
-        setBooks(results);
+        const { results, next, previous } = response.data;
+        setBooks(() => results);
+        setNextURL(next);
+        setPreviousURL(previous);
       })
       .finally(() => {
         setLoading(false);
@@ -90,6 +94,28 @@ function Wishlist() {
         ) : (
           <p className="text-gray-500 text-center">No books in wishlist</p>
         )}
+      </div>
+      <div>
+        <button
+          type="button"
+          onClick={() => fetchBooks(previousURL)}
+          disabled={!previousURL}
+          className={`p-2 text-white bg-blue-500 ${
+            !previousURL && "cursor-not-allowed opacity-50"
+          }`}
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          onClick={() => fetchBooks(nextURL)}
+          disabled={!nextURL}
+          className={`p-2 text-white bg-blue-500 ${
+            !nextURL && "cursor-not-allowed opacity-50"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

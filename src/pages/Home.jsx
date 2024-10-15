@@ -15,7 +15,7 @@ function Home() {
     setLoading(true);
     axios.get(URL, { signal }).then((response) => {
       const { results, next, previous } = response.data;
-      setBooks((_) => results);
+      setBooks(() => results);
       setNextURL(next);
       setPreviousURL(previous);
       setLoading(false);
