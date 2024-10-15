@@ -95,28 +95,30 @@ function Wishlist() {
           <p className="text-gray-500 text-center">No books in wishlist</p>
         )}
       </div>
-      <div>
-        <button
-          type="button"
-          onClick={() => fetchBooks(previousURL)}
-          disabled={!previousURL}
-          className={`p-2 text-white bg-blue-500 ${
-            !previousURL && "cursor-not-allowed opacity-50"
-          }`}
-        >
-          Previous
-        </button>
-        <button
-          type="button"
-          onClick={() => fetchBooks(nextURL)}
-          disabled={!nextURL}
-          className={`p-2 text-white bg-blue-500 ${
-            !nextURL && "cursor-not-allowed opacity-50"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+      {books.length && (
+        <div>
+          <button
+            type="button"
+            onClick={() => fetchBooks(previousURL)}
+            disabled={!previousURL}
+            className={`p-2 text-white bg-blue-500 ${
+              !previousURL && "cursor-not-allowed opacity-50"
+            }`}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => fetchBooks(nextURL)}
+            disabled={!nextURL}
+            className={`p-2 text-white bg-blue-500 ${
+              !nextURL && "cursor-not-allowed opacity-50"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
